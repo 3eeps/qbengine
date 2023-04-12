@@ -140,7 +140,7 @@ SUB updActors
     IF actor(i).energy < 1 THEN actor(i).hp = actor(i).hp - RND * 2
 
     IF actor(i).energy < 25 THEN
-      actor(i).target = 42
+      actor(i).target = 84
       actor(i).state = "find"
       IF actor(i).target = -1 THEN actor(i).state = "wand"
     ELSE
@@ -167,7 +167,7 @@ SUB updActors
           IF scene(x, y) = actor(i).target THEN
 			dx = actor(i).x - x
             dy = actor(i).y - y
-			IF targetCount < maxTarget  THEN 
+			IF targetCount <= maxTarget THEN 
 			targetCount = targetCount + 1			
 				vdistObjList(targetCount).x = dx
 				vdistObjList(targetCount).y = dy
@@ -231,6 +231,7 @@ SUB updActors
 
         IF scene(actor(i).x, actor(i).y) = actor(i).target THEN
           actor(i).target = -1
+		  scene(actor(i).x, actor(i).y) = 0
           actor(i).energy = actor(i).energy + 25
         END IF
 
