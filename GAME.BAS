@@ -174,7 +174,7 @@ SUB updActors
         NEXT
 
 
-		
+		' did they show up?
 		' find closest target, then clear target list
 		DIM lastTargetList(3)
 		actorx = actor(i).x 
