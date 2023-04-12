@@ -177,17 +177,19 @@ SUB updActors
 		actorx = actor(i).x 
 		actory = actor(i).y
 		minDist = 64
-		FOR j = 1 to maxTarget - 1
-			dx = vdistObjList(j).x - actorx
-			dy = vdistObjList(j).y - actory
-			dist = SQR(dx^2 + dy^2)
-			IF dist < minDist THEN
-				closestTarget = j
-				minDist = dist
-			END IF
-			vdistObjList(j).x = 0
-			vdistObjList(j).y = 0
-		NEXT
+		IF storeTarget > 0 THEN
+			FOR j = 1 to storeTarget
+				dx = vdistObjList(j).x - actorx
+				dy = vdistObjList(j).y - actory
+				dist = SQR(dx^2 + dy^2)
+				IF dist < minDist THEN
+					closestTarget = j
+					minDist = dist
+				END IF
+				vdistObjList(j).x = 0
+				vdistObjList(j).y = 0
+			NEXT
+		END IF
 
         rand = RND * 2
         IF dx < 0 AND dy < 0 THEN
