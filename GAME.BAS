@@ -10,8 +10,10 @@ TYPE obj
   x AS INTEGER
   y AS INTEGER
   hp AS INTEGER
+  dirCount as INTEGER
   energy AS INTEGER
   spr AS INTEGER
+  ' *** lets move STATE to ints at some point, no need to compare strings
   state AS STRING * 4
   target AS INTEGER
   ftile AS INTEGER
@@ -150,16 +152,18 @@ SUB updActors
     SELECT CASE actor(i).state
 
       CASE "wand"
-        rand = RND * 8
-        IF rand = 1 THEN
-          actor(i).x = actor(i).x + 1
-        ELSEIF rand = 2 THEN actor(i).x = actor(i).x - 1
-        ELSEIF rand = 3 THEN actor(i).y = actor(i).y - 1
-        ELSEIF rand = 4 THEN actor(i).y = actor(i).y + 1
-        END IF
+		'
+		actor(i).dirCount = (RND * 4) + 1
+		rand = RND * 8
+		IF rand = 1 THEN
+			actor(i).x = actor(i).x + 1
+		ELSEIF rand = 2 THEN actor(i).x = actor(i).x - 1
+		ELSEIF rand = 3 THEN actor(i).y = actor(i).y - 1
+		ELSEIF rand = 4 THEN actor(i).y = actor(i).y + 1		
+		END IF						
 
       CASE "find"
-		' check a 8x8 area around actor, store up to three target to compare
+		' check vdist area around actor, store up to three target to compare
 		dx = 0
 		dy = 0
         FOR x = actor(i).x - vdist TO actor(i).x + vdist
@@ -167,7 +171,7 @@ SUB updActors
           IF scene(x, y) = actor(i).target THEN
 			dx = actor(i).x - x
             dy = actor(i).y - y
-			IF targetCount <= maxTarget THEN 
+			IF targetCount <= maxTarget - 1 THEN 
 				targetCount = targetCount + 1			
 				vdistObjList(targetCount).x = dx
 				vdistObjList(targetCount).y = dy
