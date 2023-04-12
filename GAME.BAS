@@ -146,7 +146,7 @@ SUB updActors
     IF actor(i).energy < 1 THEN actor(i).hp = actor(i).hp - RND * 2
 
     IF actor(i).energy < 25 THEN
-      actor(i).target = 84
+      actor(i).target = 42
       actor(i).state = "find"
       IF actor(i).target = -1 THEN actor(i).state = "wand"
     ELSE
@@ -182,9 +182,7 @@ SUB updActors
 		END IF				
 
       CASE "find"
-		' check vdist area around actor, store up to three similar targets
-		dx = 0
-		dy = 0
+		' check vdist area around actor, store up to three similar targets		
         FOR x = actor(i).x - vdist TO actor(i).x + vdist
           FOR y = actor(i).y - vdist TO actor(i).y + vdist
           IF scene(x, y) = actor(i).target THEN
@@ -203,9 +201,6 @@ SUB updActors
 		actorx = actor(i).x 
 		actory = actor(i).y
 		minDist = 10000
-		dx = 0
-		dy = 0
-		closestTarget = 0
 		IF targetCount > 0 THEN
 			FOR j = 1 to targetCount
 				dx = vdistObjList(j).x - actorx
