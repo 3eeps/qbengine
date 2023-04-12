@@ -91,7 +91,7 @@ SUB initGame
   NEXT
 
   ' load sprite pak
-  OPEN "wall.pak" FOR INPUT AS #1
+  OPEN "test.pak" FOR INPUT AS #1
   fileLen = (sprNum * 42) + 1
   FOR i = 1 TO fileLen
     INPUT #1, sprIndex(i)
@@ -117,7 +117,7 @@ SUB initGame
   NEXT
 
   ' load .map file
-  OPEN "wall.map" FOR INPUT AS #1
+  OPEN "test.map" FOR INPUT AS #1
   FOR y = 0 TO 100
     FOR x = 0 TO 100
       INPUT #1, scene(x, y)
@@ -168,7 +168,7 @@ SUB updActors
 			dx = actor(i).x - x
             dy = actor(i).y - y
 			IF targetCount <= maxTarget THEN 
-			targetCount = targetCount + 1			
+				targetCount = targetCount + 1			
 				vdistObjList(targetCount).x = dx
 				vdistObjList(targetCount).y = dy
 			END IF							
