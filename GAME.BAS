@@ -10,7 +10,8 @@ TYPE obj
   x AS INTEGER
   y AS INTEGER
   hp AS INTEGER
-  dirCount as INTEGER
+  direction as INTEGER
+  steps as INTEGER
   energy AS INTEGER
   spr AS INTEGER
   ' *** lets move STATE to ints at some point, no need to compare strings
@@ -65,7 +66,7 @@ END SUB
 SUB initGame
 
   SCREEN 13
-  gameMenu
+  'gameMenu
 
   ' game params
   maxTarget = 4
@@ -87,6 +88,8 @@ SUB initGame
     actor(i).state = "wand"
     actor(i).energy = 45
     actor(i).target = 0
+	actor(i).steps = 0
+	actor(i).direction = RND * 4
     actor(i).spr = 42
     actor(i).ftile = scene(actor(i).x, actor(i).y)
     scene(actor(i).x, actor(i).y) = actor(i).spr
@@ -136,6 +139,7 @@ SUB updActors
       actor(i).state = "dead"
       GOTO skipAi
     END IF
+	'store current sprite actor is 'on top' of
     scene(actor(i).x, actor(i).y) = actor(i).ftile
 
     actor(i).energy = actor(i).energy - RND * 2
@@ -151,19 +155,34 @@ SUB updActors
                     
     SELECT CASE actor(i).state
 
-      CASE "wand"
-		'
-		actor(i).dirCount = (RND * 4) + 1
-		rand = RND * 8
-		IF rand = 1 THEN
-			actor(i).x = actor(i).x + 1
-		ELSEIF rand = 2 THEN actor(i).x = actor(i).x - 1
-		ELSEIF rand = 3 THEN actor(i).y = actor(i).y - 1
-		ELSEIF rand = 4 THEN actor(i).y = actor(i).y + 1		
-		END IF						
+      CASE "wand"		
+		' check actors current direction and store it
+		IF actor(i).direction = 0 THEN			
+			dx = 1: dy = 0 'right
+		ELSEIF actor(i).direction = 1 THEN
+			dx = -1: dy = 0 'left
+		ELSEIF actor(i).direction = 2 THEN
+			dx = 0: dy = -1 'up
+		ELSEIF actor(i).direction = 3 THEN
+			dx = 0: dy = 1 'down
+		END IF	
+		newx = actor(i).x + dx
+		newy = actor(i).y + dy
+		
+		' if actor is not blocked and within step limit, give actor stored pos and increase step count
+		IF scene(newx, newy) = 0 AND actor(i).steps < 4 THEN
+			actor(i).x = newx
+			actor(i).y = newy
+			actor(i).steps = actor(i).steps + 1
+		ELSE
+			' reset step count and give actor new direction
+			actor(i).steps = 0
+			rand = RND * 4
+			actor(i).direction = rand
+		END IF				
 
       CASE "find"
-		' check vdist area around actor, store up to three target to compare
+		' check vdist area around actor, store up to three similar targets
 		dx = 0
 		dy = 0
         FOR x = actor(i).x - vdist TO actor(i).x + vdist
@@ -171,7 +190,7 @@ SUB updActors
           IF scene(x, y) = actor(i).target THEN
 			dx = actor(i).x - x
             dy = actor(i).y - y
-			IF targetCount <= maxTarget - 1 THEN 
+			IF targetCount < maxTarget THEN 
 				targetCount = targetCount + 1			
 				vdistObjList(targetCount).x = dx
 				vdistObjList(targetCount).y = dy
@@ -202,6 +221,7 @@ SUB updActors
 			ERASE vdistObjList
 		END IF
 
+		' move towards target
         rand = RND * 2
         IF dx < 0 AND dy < 0 THEN
           IF rand = 1 THEN
@@ -233,6 +253,7 @@ SUB updActors
         ELSEIF dx > 0 AND dy = 0 THEN actor(i).x = actor(i).x - 1
         END IF
 
+		' once target is found, null current target, remove target sprite from world and adjust energy
         IF scene(actor(i).x, actor(i).y) = actor(i).target THEN
           actor(i).target = -1
 		  scene(actor(i).x, actor(i).y) = 0
@@ -240,6 +261,7 @@ SUB updActors
         END IF
 
     END SELECT
+	' replace sprite 'under' actor
     actor(i).ftile = scene(actor(i).x, actor(i).y)
     scene(actor(i).x, actor(i).y) = actor(i).spr	
 	
