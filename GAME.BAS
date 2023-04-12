@@ -23,9 +23,9 @@ END TYPE
 DIM SHARED win AS obj
 DIM SHARED user AS obj
 DIM SHARED actor(32) AS obj
+DIM SHARED vdistObjList(3) as obj
 
 DIM SHARED maxTarget
-DIM SHARED vdistObjList(3) as obj
 DIM SHARED src(8, 8)
 DIM SHARED scene(100, 100)
 DIM SHARED sprIndex(6800)
@@ -87,7 +87,7 @@ SUB initGame
     actor(i).hp = 35
     actor(i).state = "wand"
     actor(i).energy = 45
-    actor(i).target = 0
+    actor(i).target = -1
 	actor(i).steps = 0
 	actor(i).direction = RND * 4
     actor(i).spr = 42
@@ -135,6 +135,7 @@ END SUB
 SUB updActors
     
   FOR i = 1 TO maxAi
+  
     IF actor(i).hp <= 0 THEN
       actor(i).state = "dead"
       GOTO skipAi
@@ -147,12 +148,13 @@ SUB updActors
 
     IF actor(i).energy < 25 THEN
       actor(i).target = 42
-      actor(i).state = "find"
-      IF actor(i).target = -1 THEN actor(i).state = "wand"
+      actor(i).state = "find"      
     ELSE
       actor(i).state = "wand"
     END IF
-                    
+         
+	IF actor(i).target = -1 THEN actor(i).state = "wand"
+	
     SELECT CASE actor(i).state
 
       CASE "wand"		
