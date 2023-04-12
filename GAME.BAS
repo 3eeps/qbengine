@@ -173,24 +173,21 @@ SUB updActors
           NEXT
         NEXT
 
-
-		' did they show up?
 		' find closest target, then clear target list
-		DIM lastTargetList(3)
 		actorx = actor(i).x 
 		actory = actor(i).y
-		IF storeTarget > 1 THEN
-			FOR j = 1 to maxTarget - 1
-				IF vdistObjList(j).x <> 0 AND vdistObjList(j).y <> 0 THEN
-					distx = vdistObjList(j).x - actorx
-					disty = vdistObjList(j).y - actory
-					IF distx  
-					vdistObjList(j).x = 0
-					vdistObjList(j).y = 0
-			NEXT
-		ELSE
-
-
+		minDist = 64
+		FOR j = 1 to maxTarget - 1
+			dx = vdistObjList(j).x - actorx
+			dy = vdistObjList(j).y - actory
+			dist = SQR(dx^2 + dy^2)
+			IF dist < minDist THEN
+				closestTarget = j
+				minDist = dist
+			END IF
+			vdistObjList(j).x = 0
+			vdistObjList(j).y = 0
+		NEXT
 
         rand = RND * 2
         IF dx < 0 AND dy < 0 THEN
