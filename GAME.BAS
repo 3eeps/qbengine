@@ -68,7 +68,7 @@ SUB initGame
   ' game params
   maxTarget = 4
   maxAi = 1
-  vdist = 5
+  vdist = 8
   sprSize = 8
   user.x = 20
   user.y = 12
