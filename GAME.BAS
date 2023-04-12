@@ -159,13 +159,16 @@ SUB updActors
         END IF
 
       CASE "find"
+		' check a 8x8 area around actor, store up to three target to compare
+		dx = 0
+		dy = 0
         FOR x = actor(i).x - vdist TO actor(i).x + vdist
           FOR y = actor(i).y - vdist TO actor(i).y + vdist
           IF scene(x, y) = actor(i).target THEN
 			dx = actor(i).x - x
             dy = actor(i).y - y
 			IF storeTarget < maxTarget  THEN 
-				storeTarget = storeTarget + 1			
+			storeTarget = storeTarget + 1			
 				vdistObjList(storeTarget).x = dx
 				vdistObjList(storeTarget).y = dy
 			END IF							
@@ -176,19 +179,23 @@ SUB updActors
 		' find closest target, then clear target list
 		actorx = actor(i).x 
 		actory = actor(i).y
-		minDist = 64
+		minDist = 10000
+		dx = 0
+		dy = 0
+		closestTarget = 0
 		IF storeTarget > 0 THEN
 			FOR j = 1 to storeTarget
 				dx = vdistObjList(j).x - actorx
 				dy = vdistObjList(j).y - actory
-				dist = SQR(dx^2 + dy^2)
-				IF dist < minDist THEN
+				distSqr = dx^2 + dy^2
+				IF distSqr < minDist^2 THEN
 					closestTarget = j
-					minDist = dist
+					minDist = SQR(distSqr)
 				END IF
-				vdistObjList(j).x = 0
-				vdistObjList(j).y = 0
 			NEXT
+			dx = vdistObjList(closestTarget).x
+			dy = vdistObjList(closestTarget).y
+			ERASE vdistObjList
 		END IF
 
         rand = RND * 2
