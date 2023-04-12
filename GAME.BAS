@@ -167,10 +167,10 @@ SUB updActors
           IF scene(x, y) = actor(i).target THEN
 			dx = actor(i).x - x
             dy = actor(i).y - y
-			IF storeTarget < maxTarget  THEN 
-			storeTarget = storeTarget + 1			
-				vdistObjList(storeTarget).x = dx
-				vdistObjList(storeTarget).y = dy
+			IF targetCount < maxTarget  THEN 
+			targetCount = targetCount + 1			
+				vdistObjList(targetCount).x = dx
+				vdistObjList(targetCount).y = dy
 			END IF							
           END IF
           NEXT
@@ -183,8 +183,8 @@ SUB updActors
 		dx = 0
 		dy = 0
 		closestTarget = 0
-		IF storeTarget > 0 THEN
-			FOR j = 1 to storeTarget
+		IF targetCount > 0 THEN
+			FOR j = 1 to targetCount
 				dx = vdistObjList(j).x - actorx
 				dy = vdistObjList(j).y - actory
 				distSqr = dx^2 + dy^2
