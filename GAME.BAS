@@ -14,7 +14,7 @@ TYPE obj
   steps as INTEGER
   energy AS INTEGER
   spr AS INTEGER
-  ' *** lets move STATE to ints at some point, no need to compare strings
+' *** lets move STATE to ints at some point, no need to compare strings
   state AS STRING * 4
   target AS INTEGER
   ftile AS INTEGER
@@ -218,38 +218,42 @@ SUB updActors
 			ERASE vdistObjList
 		END IF
 
-		' move towards target
-        rand = RND * 2
+		' move towards target        
         IF dx < 0 AND dy < 0 THEN
-          IF rand = 1 THEN
-            actor(i).x = actor(i).x + 1
-          ELSE
-            actor(i).y = actor(i).y + 1
-          END IF
+			rand = RND * 2
+			IF rand = 1 THEN
+				actor(i).x = actor(i).x + 1
+			ELSE
+				actor(i).y = actor(i).y + 1
+			END IF
         ELSEIF dx > 0 AND dy > 0 THEN
-          IF rand = 1 THEN
-            actor(i).x = actor(i).x - 1
-          ELSE
-            actor(i).y = actor(i).y - 1
-          END IF
+			rand = RND * 2
+			IF rand = 1 THEN
+				actor(i).x = actor(i).x - 1
+			ELSE
+				actor(i).y = actor(i).y - 1
+			END IF
         ELSEIF dx < 0 AND dy > 0 THEN
-          IF rand = 1 THEN
-            actor(i).x = actor(i).x + 1
-          ELSE
-            actor(i).y = actor(i).y - 1
-          END IF
+			rand = RND * 2
+			IF rand = 1 THEN
+				actor(i).x = actor(i).x + 1
+			ELSE
+				actor(i).y = actor(i).y - 1
+			END IF
         ELSEIF dx > 0 AND dy < 0 THEN
-          IF rand = 1 THEN
-            actor(i).x = actor(i).x - 1
-          ELSE
-            actor(i).y = actor(i).y + 1
-          END IF
+			rand = RND * 2
+			IF rand = 1 THEN
+				actor(i).x = actor(i).x - 1
+			ELSE
+				actor(i).y = actor(i).y + 1
+			END IF
         ELSEIF dx = 0 AND dy < 0 THEN actor(i).y = actor(i).y + 1
         ELSEIF dx = 0 AND dy > 0 THEN actor(i).y = actor(i).y - 1
         ELSEIF dx < 0 AND dy = 0 THEN actor(i).x = actor(i).x + 1
         ELSEIF dx > 0 AND dy = 0 THEN actor(i).x = actor(i).x - 1
         END IF
 
+'TODO_ make it so actor doesn't walk into players location to 'find' them
 		' once target is found, null current target, remove target sprite from world and adjust energy
         IF scene(actor(i).x, actor(i).y) = actor(i).target THEN
           actor(i).target = -1
